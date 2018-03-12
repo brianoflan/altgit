@@ -18,11 +18,16 @@ get_uid() {
   [[ $UID ]] && echo "$UID" || id -u
 }
 get_user() {
-  local result=''
+  local maybe=''
+  # local result=''
   if [[ $altname ]] && [[ -e ~/.ssh/altgit/$altname/username ]] ; then
-    result=$(cat ~/.ssh/altgit/$altname/username | head -1)
+    maybe=$(cat ~/.ssh/altgit/$altname/username | head -1)
   fi ;
-  [[ $result ]] && echo $result || [[ $USER ]] && echo "$USER" || id -un
+  # # [[ $maybe ]] && echo "$maybe" || [[ $USER ]] && echo "$USER" || id -un
+  # [[ $maybe ]] && result=$maybe || [[ $USER ]] && result=$USER || result=$(id -un)
+  # echo "get_user()='$result'" 1>&2
+  # echo "$result"
+  [[ $maybe ]] && echo "$maybe" || { [[ $USER ]] && echo "$USER" || id -un ; }
 }
 get_host_share() {
   pwd
