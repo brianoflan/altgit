@@ -9,6 +9,7 @@ echo "$USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/0-$USER
 mkdir -p $(dirname "$HOME") && mv /resources/home "$HOME"
 # # NOTE: Ubuntu has a somewhat surprising ordering/timing for loading .bashrc vs. .bash_profile:
 echo '[[ $LOADED_BASH_PROFILE ]] || source ~/.bash_profile' >> $HOME/.bashrc
+echo 'echo "$PS1" | egrep "SHLVL" >/dev/null || export PS1="(\$SHLVL)$PS1"' >> $HOME/.bashrc
 echo 'PATH=$HOME/pre-bin:$PATH:$HOME/bin' >> $HOME/.bash_profile
 echo '[[ $INIT_DONE ]] || bash ~/.init.sh' >> $HOME/.bash_profile
 echo 'export LOADED_BASH_PROFILE=true' >> $HOME/.bash_profile
