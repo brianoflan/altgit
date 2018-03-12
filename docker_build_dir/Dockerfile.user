@@ -6,8 +6,9 @@ ENV UID={{ .UID }}
 ENV GROUP={{ .GROUP }}
 ENV GID={{ .GID }}
 ENV HOME=/home/$USER
+
 COPY mkuser.sh /resources/mkuser.sh
-RUN bash /resources/mkuser.sh
+RUN bash -ex /resources/mkuser.sh
 COPY init.sh $HOME/.init.sh
 RUN chmod +x $HOME/.init.sh
 WORKDIR $HOME

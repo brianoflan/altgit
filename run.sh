@@ -6,10 +6,6 @@ source "$d0/_source.sh"
 
 main() {
   export ALTGIT_SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
-  echo "ALTGIT_SCRIPT_DIR=$ALTGIT_SCRIPT_DIR" 1>&2
-  echo "PWD=$PWD0" 1>&2
-  echo "0=$0" 1>&2
-
   docker_build_dir="$ALTGIT_SCRIPT_DIR/docker_build_dir"
   [[ -d "$docker_build_dir" ]] || mkdir -p "$docker_build_dir"
   cd "$docker_build_dir" || die "ERROR: $?: Failed to 'cd $docker_build_dir'."

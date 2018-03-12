@@ -21,4 +21,3 @@ if [[ $ALTNAME ]] ; then
 fi ;
 chmod -R go-rwx ~/.ssh ~/.aws
 export INIT_DONE=true
-

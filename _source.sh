@@ -22,19 +22,7 @@ get_user() {
   if [[ $altname ]] && [[ -e ~/.ssh/altgit/$altname/username ]] ; then
     result=$(cat ~/.ssh/altgit/$altname/username | head -1)
   fi ;
-  # # Quick version:
   [[ $result ]] && echo $result || [[ $USER ]] && echo "$USER" || id -un
-  # # Debug version:
-  # echo -e "\nSTDERR: get_user(): result='$result'" 1>&2
-  # if [[ -z $result ]] ; then
-  #   if [[ -z $USER ]] ; then
-  #     result=$(id -un)
-  #   else
-  #     result=$USER
-  #   fi ;
-  # fi ;
-  # echo -e "\nSTDERR: get_user(): result='$result'" 1>&2
-  # echo "$result"
 }
 get_host_share() {
   pwd
