@@ -36,9 +36,9 @@ already_running() {
   [[ $already ]]
 }
 join_current_container() {
-  local sets=$-; set -x
   check_up_to_date
   echo "NOTE: Container '$USER_IMG' already running. Spawning shell in it."
+  local sets=$-; set -x
   docker exec -it \
     -e            ALTNAME=$altname \
     "$USER_IMG" bash || echo "ERROR: $?: From docker exec."
