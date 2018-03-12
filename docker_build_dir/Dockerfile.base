@@ -1,0 +1,4 @@
+FROM ubuntu
+RUN apt-get update && apt-get install -y sudo rsync openssh-client
+RUN apt-get install -y git vim
+RUN mkdir -p /resources/home/bin /resources/home/pre-bin

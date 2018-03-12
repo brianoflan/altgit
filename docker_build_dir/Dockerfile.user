@@ -1,0 +1,16 @@
+FROM {{ .BASE_TAG }}
+
+ENV ALTNAME=defaultalt
+ENV USER={{ .USER }}
+ENV UID={{ .UID }}
+ENV GROUP={{ .GROUP }}
+ENV GID={{ .GID }}
+ENV HOME=/home/$USER
+COPY mkuser.sh /resources/mkuser.sh
+RUN bash /resources/mkuser.sh
+COPY init.sh $HOME/.init.sh
+RUN chmod +x $HOME/.init.sh
+WORKDIR $HOME
+USER $USER
+
+TAG {{ .USER_TAG }}

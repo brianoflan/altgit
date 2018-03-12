@@ -1,0 +1,60 @@
+#!/bin/bash
+
+d0=$(dirname "$0")
+source "$d0/vars.sh"
+source "$d0/_source.sh"
+
+_dockeruser() {
+  altname=$1
+  local sets=$-
+
+  export DOCKERUSER_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+  echo "DOCKERUSER_DIR=$DOCKERUSER_DIR" 1>&2
+  echo "PWD=$PWD0" 1>&2
+  echo "0=$0" 1>&2
+
+  [[ $altname ]] && USER_IMG=$USER_IMG-$altname || altname=$(get_user)
+  export altname
+  USER_TAG=$USER_IMG:$USER_VERSION
+
+  CONTAINED_USER=$(get_user)
+  already=$(docker images -f=reference="$USER_TAG" --format '{{.ID}}')
+  [[ $already ]] || _rocker_build || die "ERROR: $?: From rocker build."
+  cd "$PWD0"
+
+  set -x
+  docker run --rm -it --name $USER_IMG \
+    -e            ALTNAME=$altname \
+    -v            ~/.ssh/:/resources/.ssh.gold:ro \
+    -v      ~/.gitconfig/:/resources/.gitconfig.gold:ro \
+    -v         $HOME/.aws:/resources/.aws.gold:ro \
+    -v  $(get_host_share):$(get_container_share) \
+    "$USER_TAG" bash
+  #
+  set +x
+  set -$sets
+}
+_rocker_build() {
+  local return=0
+  local sets=$-
+  cd "$DOCKERUSER_DIR/docker_build_dir"
+  UIDX=$(get_uid)
+  GIDX=$(get_gid)
+  GROUPX=$(get_group)
+  {
+    echo
+    echo "UID='$UIDX'"
+    echo "GID='$GIDX'"
+    echo "GROUP='$GROUPX'"
+  } | sed -e 's/^/STDERR: /' 1>&2
+
+  set -x
+  rocker build -var BASE_TAG="$BASE_TAG" -var USER_TAG="$USER_TAG" \
+  -var USER="$CONTAINED_USER" -var UID="$UIDX" \
+  -var GROUP="$GROUPX" -var GID="$GIDX" \
+  -f Dockerfile.user || return=$?
+  set +x
+  return $return
+}
+
+_dockeruser "$@"
