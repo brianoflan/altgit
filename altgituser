@@ -37,10 +37,18 @@ already_running() {
 }
 join_current_container() {
   local sets=$-; set -x
+  check_up_to_date
+  echo "NOTE: Container '$USER_IMG' already running. Spawning shell in it."
   docker exec -it \
     -e            ALTNAME=$altname \
     "$USER_IMG" bash || echo "ERROR: $?: From docker exec."
   set +x; set -$sets
+}
+check_up_to_date() {
+  local img=$(docker ps -f name=$USER_IMG --format '{{.Image}}')
+  local warning="Container '$USER_IMG' is already running but it is not up-to-date with the current version."
+  warning="$warning (Should be $USER_TAG; is instead the older version $img.)"
+  [[ $img == $USER_TAG ]] || echo "WARNING: $warning"
 }
 run_new_container() {
   local sets=$-; set -x
